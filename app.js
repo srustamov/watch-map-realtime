@@ -15,6 +15,9 @@ io.on('connection', (socket) => {
         data.socket_id = socket.id;
         io.emit('location', data)
     });
+    socket.on('safe-area', (message) => {
+        io.to(message.id).emit('notification',`This is ${message.name} area`);
+    });
 
     socket.on('disconnect', () => {
         io.emit('leave', socket.id)
