@@ -1,19 +1,29 @@
 {
-    "name": "geolocation-server",
-    "version": "1.0.0",
-    "description": "",
-    "main": "app.js",
-    "scripts": {
-        "serve": "nodemon app.js"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "express": "^4.17.1",
-        "socket.io": "^2.3.0"
-    },
-    "devDependencies": {
-        "nodemon": "^2.0.4"
-    }
+  "name": "Location",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon -w server.js -w nuxt.config.js server.js",
+    "build": "nuxt build",
+    "start": "NODE_ENV=production node server.js",
+    "export": "nuxt export",
+    "serve": "nuxt serve"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.11.0",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "leaflet": "^1.6.0",
+    "leaflet-polylinedecorator": "^1.6.0",
+    "net": "^1.0.2",
+    "nodemon": "^2.0.4",
+    "nuxt": "^2.13.0",
+    "socket.io": "^2.3.0",
+    "vuetify-dialog": "^2.0.6"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.11.2",
+    "sass": "^1.26.10",
+    "sass-loader": "^9.0.2"
+  }
 }

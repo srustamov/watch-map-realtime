@@ -4,7 +4,8 @@
 
 <script>
 import "leaflet/dist/leaflet.css";
-import {ValidateCoords} from '~/utils/map';
+import { ValidateCoords, notifyMe } from "~/utils/map";
+import $socket from "~/plugins/socket";
 export default {
   components: {},
   data: () => ({
@@ -38,38 +39,71 @@ export default {
   }),
   mounted() {
     this.map = L.map("map").setView(this.center, this.zoom);
-    this.map.on("click", function(e) {
-      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng);
+    this.map.on("click", e => {
+      this.$emit("select", e);
     });
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; ASC"
     }).addTo(this.map);
-    this.initPolygons();
 
-    $socket.on("location", (data) => {
-        if (data.socket_id) {
-            let isSafeArea = ValidateCoords.isInsidePitch(
-                data.latitude,
-                data.longitude,
-                polygons[0].latitudes,
-                polygons[0].longitudes
-            );
-            if (isSafeArea) {
-                socket.emit("safe-area", {
-                    id: data.socket_id,
-                    name: polygons[0].name,
-                });
-                notifyMe("Safe Area");
-            }
-            createOrUpdateMarker(data);
+    //this.initPolygons();
+
+    $socket.on("location", data => {
+      if (data.socket_id) {
+        let isSafeArea = ValidateCoords.isInsidePitch(
+          data.latitude,
+          data.longitude,
+          polygons[0].latitudes,
+          polygons[0].longitudes
+        );
+        if (isSafeArea) {
+          socket.emit("safe-area", {
+            id: data.socket_id,
+            name: polygons[0].name
+          });
+          notifyMe("Safe Area");
         }
+        createOrUpdateMarker(data);
+      }
     });
 
-    $socket.on("leave", (id) => {
-        clearMarker(id);
+    $socket.on("leave", id => {
+      clearMarker(id);
     });
   },
   methods: {
+    coordsCovertDistance(lat1, lon1, lat2, lon2) {
+      //1° of latitude = always 111.32 km
+      //1° of longitude = 40075 km * cos( latitude ) / 360
+      //eart radius
+      let R = 6378.137;
+      let dLat = (lat2 * Math.PI) / 180 - (lat1 * Math.PI) / 180;
+      let dLon = (lon2 * Math.PI) / 180 - (lon1 * Math.PI) / 180;
+      let a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+      let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      let d = R * c;
+      return d * 1000;
+    },
+
+
+    createRectangle(a, b) {
+      L.rectangle([a, b], { color: "Red", weight: 1 }).addTo(this.map);
+      notifyMe("Created area");
+    },
+    createCircle(center, radius) {
+      L.circle(center, radius, {
+        color: "green",
+        fillColor: "#f03",
+        fillOpacity: 0
+      }).addTo(this.map);
+      notifyMe("Created area");
+    },
+
     getCoordsFromData(data) {
       return [data.latitude, data.longitude].map(c => parseFloat(c));
     },
@@ -103,6 +137,26 @@ export default {
         map.removeLayer(markers[index]);
         this.markers.splice(index, 1);
       }
+    },
+    createPolygon(coords) {
+      let polygon = L.polygon(coords,
+        {
+          color: "#ff7800",
+          weight: 3
+        }
+      ).addTo(this.map);
+
+      L.polylineDecorator(polygon, {
+        patterns: [
+          {
+            offset: 0,
+            repeat: 10,
+            symbol: L.Symbol.dash({
+              pixelSize: 0
+            })
+          }
+        ]
+      }).addTo(this.map);
     },
     initPolygons() {
       let polygonCoords = [];
@@ -143,7 +197,7 @@ export default {
 
 <style>
 #map {
-  height: calc(100vh - 110px);
+  height: calc(100vh - 70px);
   width: 100%;
   overflow: hidden;
 }

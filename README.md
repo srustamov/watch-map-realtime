@@ -1,4 +1,4 @@
-# map
+# location
 
 ## Build Setup
 
