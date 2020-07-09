@@ -5,40 +5,27 @@ const TWO_PI = 2 * PI;
 const polygonCoords = [];
 
 var markers = [];
-// 40.46345409436718, 50.04817485809327
 const polygons = [{
-        name: "AirPort",
-        latitudes: [
-            40.465243,
-            40.466957,
-            40.466812,
-            40.464944,
-            40.461626,
-            40.459649,
-            // 40.46345409436718,
-        ],
-        longitudes: [
-            50.050168,
-            50.052108,
-            50.053873,
-            50.054311,
-            50.054544,
-            50.052609,
-            // 50.04817485809327,
-        ],
-    },
-    // {
-    //     name: "test",
-    //     latitudes: [
-    //         40.4632581889531,
-    //         40.46833521978792,
-    //     ],
-    //     longitudes: [
-    //         50.049483776092536,
-    //         50.04008531570435
-    //     ]
-    // },
-];
+    name: "AirPort",
+    latitudes: [
+        40.465243,
+        40.466957,
+        40.466812,
+        40.464944,
+        40.461626,
+        40.459649,
+        40.46345409436718,
+    ],
+    longitudes: [
+        50.050168,
+        50.052108,
+        50.053873,
+        50.054311,
+        50.054544,
+        50.052609,
+        50.04817485809327,
+    ],
+}, ];
 
 polygons.forEach((polygon) => {
     polygon.latitudes.forEach((latitude, index) => {
@@ -121,15 +108,17 @@ const clearMarker = (id) => {
 };
 
 const initPolygons = () => {
-    let polygon = L.polygon([
-        polygonCoords, [
-            [40.4632581889531, 50.049483776092536],
-            [40.46833521978792, 50.04008531570435],
-        ]
-    ], {
-        color: "#ff7800",
-        weight: 3,
-    }).addTo(map);
+    let polygon = L.polygon(
+        [
+            polygonCoords, [
+                [40.4632581889531, 50.049483776092536],
+                [40.46833521978792, 50.04008531570435],
+            ],
+        ], {
+            color: "#ff7800",
+            weight: 3,
+        }
+    ).addTo(map);
 
     L.polylineDecorator(polygon, {
         patterns: [{
