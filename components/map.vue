@@ -2,9 +2,9 @@
   <div id="map"></div>
 </template>
 
-<script>
+  <script>
 import "leaflet/dist/leaflet.css";
-import { ValidateCoords, notifyMe } from "~/utils/map";
+import { ValidateCoords,getCoordsFromAngleAndDistance , notifyMe } from "~/utils/map";
 import $socket from "~/plugins/socket";
 export default {
   components: {},
@@ -58,16 +58,20 @@ export default {
               p.polygon
             );
           } else if (p.type === "center") {
-            isSafeArea = ValidateCoords.isInsideCircle(data.latitude, data.longitude,p.center,p.radius);
+            isSafeArea = ValidateCoords.isInsideCircle(
+              data.latitude,
+              data.longitude,
+              p.center,
+              p.radius
+            );
           }
 
-          if(isSafeArea) {
-            isSafeArea = p.name || 'danger zone'
+          if (isSafeArea) {
+            isSafeArea = p.name || "danger zone";
             break;
-          } 
-          
+          }
         }
-        
+
         if (isSafeArea) {
           $socket.emit("safe-area", {
             id: data.socket_id,
@@ -107,10 +111,10 @@ export default {
       }).addTo(this.map);
 
       this.safe_areas.push({
-        name:'Airport',
-        type:'polygon',
-        polygon:coords
-      })
+        name: "Airport",
+        type: "polygon",
+        polygon: coords
+      });
     },
     createCircle(center, radius) {
       L.circle(center, parseFloat(radius), {
@@ -120,12 +124,39 @@ export default {
       }).addTo(this.map);
       notifyMe("Created area");
       this.safe_areas.push({
-        name:'danger area',
+        name: "danger area",
         center,
         radius
-      })
+      });
     },
+    createLine(data) {
+      if (data.type === 2) {
+        data.coords.end = getCoordsFromAngleAndDistance(
+          ...Object.values(data.coords.start),
+          data.distance,
+          data.bearing
+        );
+      }
 
+      let corridor = L.corridor(
+        [
+          L.latLng(...Object.values(data.coords.start)),
+          L.latLng(...Object.values(data.coords.end))
+        ],
+        {
+          corridor: data.width,
+          className: "route-corridor"
+        }
+      );
+      this.map.fitBounds(corridor.getBounds());
+      this.map.addLayer(corridor);
+
+      this.safe_areas.push({
+        name: data.name || "Route line",
+        type: "line",
+        data
+      });
+    },
     getCoordsFromData({ latitude, longitude }) {
       return [latitude, longitude].map(c => parseFloat(c));
     },
@@ -159,8 +190,8 @@ export default {
         this.map.removeLayer(this.markers[index]);
         this.markers.splice(index, 1);
       }
-    },
-    
+    }
+
     // initPolygons() {
     //   let polygonCoords = [];
     //   this.polygons.forEach(polygon => {

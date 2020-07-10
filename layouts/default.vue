@@ -137,6 +137,15 @@
                 </v-row>
               </div>
               <div v-if="form.area == 2">
+                <v-select
+                  v-model="form.line.type"
+                  item-text="name"
+                  item-value="number"
+                  :items="form.line.types"
+                  :rules="[(v) => !!v || 'type is required']"
+                  label="coordinate system type"
+                  required
+                ></v-select>
                 <v-row>
                   <v-col
                     cols="12"
@@ -144,7 +153,7 @@
                   >Start Position</v-col>
                   <v-col cols="12" sm="12" md="6">
                     <v-text-field
-                      v-model="form.rectangle.coords[0].lat"
+                      v-model="form.line.coords.start.lat"
                       label="Latitude"
                       type="number"
                       :rules="form.rules.lat"
@@ -153,18 +162,33 @@
                   <v-col cols="12" sm="12" md="6">
                     <v-text-field
                       type="number"
-                      v-model="form.rectangle.coords[0].lng"
+                      v-model="form.line.coords.start.lng"
                       label="Longitude"
                       :rules="form.rules.lng"
                     ></v-text-field>
                   </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      type="number"
+                      v-model="form.line.width"
+                      label="Line cooridor width"
+                      :rules="[
+                        (v) => String(v).trim() !== '' || 'Width is required',
+                        (v) => v >= 2 || 'Width invalid',
+                      ]"
+                      suffix="metr"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-row v-if="form.line.type === 1">
                   <v-col
                     cols="12"
                     class="text-center d-flex align-center justify-space-between"
                   >End Position</v-col>
                   <v-col cols="12" sm="12" md="6">
                     <v-text-field
-                      v-model="form.rectangle.coords[1].lat"
+                      v-model="form.line.coords.end.lat"
                       label="Latitude"
                       type="number"
                       :rules="form.rules.lat"
@@ -173,18 +197,43 @@
                   <v-col cols="12" sm="12" md="6">
                     <v-text-field
                       type="number"
-                      v-model="form.rectangle.coords[1].lng"
+                      v-model="form.line.coords.end.lng"
                       label="Longitude"
                       :rules="form.rules.lng"
                     ></v-text-field>
                   </v-col>
-
+                  <v-col cols="12">
+                    <v-btn color="success" @click="drawNavLine">draw</v-btn>
+                  </v-col>
+                </v-row>
+                <v-row v-if="form.line.type === 2">
                   <v-col cols="12" sm="12" md="6">
                     <v-text-field
                       type="number"
-                      v-model="form.line.width"
-                      label="Line Width"
-                      :rules="form.line.rules.width"
+                      v-model="form.line.bearing"
+                      label="Angle from the north"
+                      :rules='[
+                        (v) => String(v).trim() !== "" || "angle is required",
+                        (v) => (v >= -360 && v <= 360) || "angle invalid",
+                      ]'
+                      append-icon="mdi-angle-acute"
+                      example="30"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="6">
+                    <v-text-field
+                      outlined
+                      type="number"
+                      v-model="form.line.distance"
+                      label="Disdance"
+                      :rules='[
+                        (v) => String(v).trim() !== "" || "distance is required",
+                        (v) => parseFloat(v) > 0 || "distance invalid",
+                      ]'
+                      suffix="metr"
+                      hint="example 500"
+                      required
                     ></v-text-field>
                   </v-col>
 
@@ -197,7 +246,7 @@
                 <v-row :key="key" v-for="(input, key) in form.polygon.inputs">
                   <v-col cols="12" sm="12" md="5" class="d-flex align-center">
                     <v-text-field
-                    outlined
+                      outlined
                       type="number"
                       v-model="form.polygon.inputs[key].lat"
                       label="Latitude"
@@ -206,7 +255,7 @@
                   </v-col>
                   <v-col cols="12" sm="12" md="5" class="d-flex align-center">
                     <v-text-field
-                     outlined
+                      outlined
                       type="number"
                       v-model="form.polygon.inputs[key].lng"
                       label="Longitude"
@@ -246,9 +295,9 @@ import navigator from "~/components/navigator";
 import MapComponent from "~/components/map.vue";
 import { areas, circle, polygon, line, rectangle } from "~/utils/area";
 
-const objectClone = (object) => {
+const objectClone = object => {
   return JSON.parse(JSON.stringify(object));
-}
+};
 
 export default {
   components: {
@@ -282,10 +331,10 @@ export default {
           v => (v <= 90 && v >= -90) || "Longitude invalid"
         ]
       },
-      circle:objectClone(circle),
-      line:objectClone(line),
-      rectangle:objectClone(rectangle),
-      polygon:objectClone(polygon)
+      circle: objectClone(circle),
+      line: objectClone(line),
+      rectangle: objectClone(rectangle),
+      polygon: objectClone(polygon)
     }
   }),
   methods: {
@@ -345,7 +394,15 @@ export default {
         this.selectedMapArea = [];
       }
     },
-    drawNavLine() {}
+    drawNavLine() {
+      if (this.$refs.form.validate()) {
+        this.$refs.map.createLine(this.form.line);
+        this.inputDialog.show = false;
+        this.form.area = "";
+        this.form.line = objectClone(line);
+        this.selectedMapArea = [];
+      }
+    }
   },
   watch: {
     area() {
@@ -358,8 +415,28 @@ export default {
             case 1:
               this.form.circle.coords = selectedMapArea.slice(-1)[0];
               break;
-            case 3:
             case 2:
+              let coord = selectedMapArea.slice(-1)[0];
+
+              if (this.form.line.type === 1) {
+                if (String(this.form.line.coords.start.lat).trim() === "") {
+                  this.form.line.coords.start.lat = coord.lat;
+                  this.form.line.coords.start.lng = coord.lng;
+                } else if (
+                  String(this.form.line.coords.end.lat).trim() === ""
+                ) {
+                  this.form.line.coords.end.lat = coord.lat;
+                  this.form.line.coords.end.lng = coord.lng;
+                } else {
+                  this.form.line.coords = objectClone(line).coords;
+                  this.selectedMapArea.shift();
+                }
+              } else if (this.form.line.type === 2) {
+                this.form.line.coords.start.lat = coord.lat;
+                this.form.line.coords.start.lng = coord.lng;
+              }
+              break;
+            case 3:
               let value = selectedMapArea.slice(-1)[0];
               if (String(this.form.rectangle.coords[0].lat).trim() === "") {
                 this.form.rectangle.coords[0].lat = value.lat;
