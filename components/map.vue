@@ -10,30 +10,29 @@ export default {
   components: {},
   data: () => ({
     center: [40.462964, 50.052201],
-    zoom: 15,
+    zoom: 10,
     map: null,
     markers: [],
-    polygons: [
+    safe_areas: [
       {
         name: "AirPort",
-        latitudes: [
-          40.465243,
-          40.466957,
-          40.466812,
-          40.464944,
-          40.461626,
-          40.459649,
-          40.46345409436718
-        ],
-        longitudes: [
-          50.050168,
-          50.052108,
-          50.053873,
-          50.054311,
-          50.054544,
-          50.052609,
-          50.04817485809327
+        type: "polygon",
+        polygon: [
+          [40.465243, 50.050168],
+          [40.466957, 50.052108],
+          [40.466812, 50.053873],
+          [40.464944, 50.054311],
+          [40.465243, 50.050168]
         ]
+      },
+      {
+        name: "AirPort",
+        type: "circle",
+        center: {
+          lat: 40.465243,
+          lng: 50.050168
+        },
+        radius: 50
       }
     ]
   }),
@@ -46,84 +45,107 @@ export default {
       attribution: "&copy; ASC"
     }).addTo(this.map);
 
-    //this.initPolygons();
-
     $socket.on("location", data => {
       if (data.socket_id) {
-        let isSafeArea = ValidateCoords.isInsidePitch(
-          data.latitude,
-          data.longitude,
-          polygons[0].latitudes,
-          polygons[0].longitudes
-        );
+        let isSafeArea = false;
+
+        for (let index = 0; index < this.safe_areas.length; index++) {
+          const p = this.safe_areas[index];
+          if (p.type === "polygon") {
+            isSafeArea = ValidateCoords.isInsidePitch(
+              data.latitude,
+              data.longitude,
+              p.polygon
+            );
+          } else if (p.type === "center") {
+            isSafeArea = ValidateCoords.isInsideCircle(data.latitude, data.longitude,p.center,p.radius);
+          }
+
+          if(isSafeArea) {
+            isSafeArea = p.name || 'danger zone'
+            break;
+          } 
+          
+        }
+        
         if (isSafeArea) {
-          socket.emit("safe-area", {
+          $socket.emit("safe-area", {
             id: data.socket_id,
-            name: polygons[0].name
+            name: isSafeArea
           });
           notifyMe("Safe Area");
         }
-        createOrUpdateMarker(data);
+        this.createOrUpdateMarker(data);
       }
     });
 
     $socket.on("leave", id => {
-      clearMarker(id);
+      this.clearMarker(id);
     });
   },
   methods: {
-    coordsCovertDistance(lat1, lon1, lat2, lon2) {
-      //1° of latitude = always 111.32 km
-      //1° of longitude = 40075 km * cos( latitude ) / 360
-      //eart radius
-      let R = 6378.137;
-      let dLat = (lat2 * Math.PI) / 180 - (lat1 * Math.PI) / 180;
-      let dLon = (lon2 * Math.PI) / 180 - (lon1 * Math.PI) / 180;
-      let a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos((lat1 * Math.PI) / 180) *
-          Math.cos((lat2 * Math.PI) / 180) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
-      let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      let d = R * c;
-      return d * 1000;
-    },
-
-
     createRectangle(a, b) {
       L.rectangle([a, b], { color: "Red", weight: 1 }).addTo(this.map);
       notifyMe("Created area");
     },
+    createPolygon(coords) {
+      let polygon = L.polygon(coords, {
+        color: "#ff7800",
+        weight: 3
+      }).addTo(this.map);
+
+      L.polylineDecorator(polygon, {
+        patterns: [
+          {
+            offset: 5,
+            repeat: 10,
+            symbol: L.Symbol.dash({
+              pixelSize: 0
+            })
+          }
+        ]
+      }).addTo(this.map);
+
+      this.safe_areas.push({
+        name:'Airport',
+        type:'polygon',
+        polygon:coords
+      })
+    },
     createCircle(center, radius) {
-      L.circle(center, radius, {
+      L.circle(center, parseFloat(radius), {
         color: "green",
         fillColor: "#f03",
         fillOpacity: 0
       }).addTo(this.map);
       notifyMe("Created area");
+      this.safe_areas.push({
+        name:'danger area',
+        center,
+        radius
+      })
     },
 
-    getCoordsFromData(data) {
-      return [data.latitude, data.longitude].map(c => parseFloat(c));
+    getCoordsFromData({ latitude, longitude }) {
+      return [latitude, longitude].map(c => parseFloat(c));
     },
 
     createOrUpdateMarker(data) {
       let popUpContent = `
-    imei: ${data.imei} <br/>
-    serial: ${data.serial} <br/>
-    latitude: ${data.latitude} <br/>
-    latitude: ${data.longitude} <br/>
-    altitude: ${data.altitude} <br/>`;
+          imei:     ${data.imei} <br/>
+          serial:   ${data.serial} <br/>
+          latitude: ${data.latitude} <br/>
+          latitude: ${data.longitude} <br/>
+          altitude: ${data.altitude} <br/>
+        `;
 
       let marker = this.markers.find(m => m._id === data.socket_id);
-
       if (marker) {
-        marker.setLatLng(getCoordsFromData(data)).update();
+        marker.setLatLng(this.getCoordsFromData(data)).update();
         marker.setPopupContent(popUpContent);
       } else {
-        let marker = L.marker(getCoordsFromData(data))
-          .addTo(map)
+        let marker = L.marker(this.getCoordsFromData(data))
+          .addTo(this.map)
           .bindPopup(popUpContent);
         marker._id = data.socket_id;
         this.markers.push(marker);
@@ -134,63 +156,35 @@ export default {
       let index = this.markers.findIndex(marker => marker._id === id);
 
       if (index > -1) {
-        map.removeLayer(markers[index]);
+        this.map.removeLayer(this.markers[index]);
         this.markers.splice(index, 1);
       }
     },
-    createPolygon(coords) {
-      let polygon = L.polygon(coords,
-        {
-          color: "#ff7800",
-          weight: 3
-        }
-      ).addTo(this.map);
+    
+    // initPolygons() {
+    //   let polygonCoords = [];
+    //   this.polygons.forEach(polygon => {
+    //     polygon.latitudes.forEach((latitude, index) => {
+    //       polygonCoords.push([latitude, polygon.longitudes[index]]);
+    //     });
+    //   });
+    //   let polygon = L.polygon([polygonCoords], {
+    //     color: "#ff7800",
+    //     weight: 3
+    //   }).addTo(this.map);
 
-      L.polylineDecorator(polygon, {
-        patterns: [
-          {
-            offset: 0,
-            repeat: 10,
-            symbol: L.Symbol.dash({
-              pixelSize: 0
-            })
-          }
-        ]
-      }).addTo(this.map);
-    },
-    initPolygons() {
-      let polygonCoords = [];
-      this.polygons.forEach(polygon => {
-        polygon.latitudes.forEach((latitude, index) => {
-          polygonCoords.push([latitude, polygon.longitudes[index]]);
-        });
-      });
-      let polygon = L.polygon(
-        [
-          polygonCoords,
-          [
-            [40.4632581889531, 50.049483776092536],
-            [40.46833521978792, 50.04008531570435]
-          ]
-        ],
-        {
-          color: "#ff7800",
-          weight: 3
-        }
-      ).addTo(this.map);
-
-      L.polylineDecorator(polygon, {
-        patterns: [
-          {
-            offset: 0,
-            repeat: 10,
-            symbol: L.Symbol.dash({
-              pixelSize: 0
-            })
-          }
-        ]
-      }).addTo(this.map);
-    }
+    //   L.polylineDecorator(polygon, {
+    //     patterns: [
+    //       {
+    //         offset: 0,
+    //         repeat: 10,
+    //         symbol: L.Symbol.dash({
+    //           pixelSize: 0
+    //         })
+    //       }
+    //     ]
+    //   }).addTo(this.map);
+    // }
   }
 };
 </script>

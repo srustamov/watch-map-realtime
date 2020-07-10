@@ -1,68 +1,106 @@
-export default class {
-  static isInsidePitch = (latitude, longitude, latArray, longArray) => {
-    let angle = 0;
-    let p1Lat;
-    let p1Long;
-    let p2Lat;
-    let p2Long;
-    let n = latArray.length;
+const PI = Math.PI;
+const TWO_PI = 2 * Math.PI;
 
-    for (let i = 0; i < n; i++) {
-      p1Lat = latArray[i] - latitude;
-      p1Long = longArray[i] - longitude;
-      p2Lat = latArray[(i + 1) % n] - latitude;
-      p2Long = longArray[(i + 1) % n] - longitude;
-      angle += ValidateCoords.angle2D(p1Lat, p1Long, p2Lat, p2Long);
+
+
+
+export function coordsCovertDistance({ lat1, lon1 }, lat2, lon2) {
+    //1° of latitude = always 111.32 km
+    //1° of longitude = 40075 km * cos( latitude ) / 360
+    //eart radius
+    let R = 6378.137;
+    let dLat = (lat2 * Math.PI) / 180 - (lat1 * Math.PI) / 180;
+    let dLon = (lon2 * Math.PI) / 180 - (lon1 * Math.PI) / 180;
+    let a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
+    return d * 1000;
+}
+
+
+export class ValidateCoords {
+    static isInsidePitch = (latitude, longitude, data) => {
+        let latArray = [];
+        let longArray = [];
+        // console.log(data)
+        data.forEach(arr => {
+            latArray.push(arr[0]);
+            longArray.push(arr[1]);
+        });
+
+        let angle = 0;
+        let p1Lat;
+        let p1Long;
+        let p2Lat;
+        let p2Long;
+        let n = latArray.length;
+
+        for (let i = 0; i < n; i++) {
+            p1Lat = latArray[i] - latitude;
+            p1Long = longArray[i] - longitude;
+            p2Lat = latArray[(i + 1) % n] - latitude;
+            p2Long = longArray[(i + 1) % n] - longitude;
+            angle += ValidateCoords.angle2D(p1Lat, p1Long, p2Lat, p2Long);
+        }
+
+        return !(Math.abs(angle) < PI);
     }
 
-    return !(Math.abs(angle) < PI);
-  };
 
-  static angle2D = (y1, x1, y2, x2) => {
-    let dtheta, theta1, theta2;
+    static isInsideCircle = ({ lat, lng }, center, radius) => {
+        return coordsCovertDistance(lat, lng, center.lat, center.lng) <= radius;
+    }
 
-    theta1 = Math.atan2(y1, x1);
-    theta2 = Math.atan2(y2, x2);
-    dtheta = theta2 - theta1;
-    while (dtheta > PI) dtheta -= TWO_PI;
-    while (dtheta < -PI) dtheta += TWO_PI;
+    static angle2D = (y1, x1, y2, x2) => {
+        let dtheta, theta1, theta2;
 
-    return dtheta;
-  };
+        theta1 = Math.atan2(y1, x1);
+        theta2 = Math.atan2(y2, x2);
+        dtheta = theta2 - theta1;
+        while (dtheta > PI) dtheta -= TWO_PI;
+        while (dtheta < -PI) dtheta += TWO_PI;
 
-  static isValidCoordinate = (latitude, longitude) => {
-    return (
-      latitude !== "" &&
-      longitude !== "" &&
-      !isNaN(latitude) &&
-      !isNaN(longitude) &&
-      latitude > -90 &&
-      latitude < 90 &&
-      longitude > -180 &&
-      longitude < 180
-    );
-  };
+        return dtheta;
+    };
+
+    static isValidCoordinate = (latitude, longitude) => {
+        return (
+            latitude !== "" &&
+            longitude !== "" &&
+            !isNaN(latitude) &&
+            !isNaN(longitude) &&
+            latitude > -90 &&
+            latitude < 90 &&
+            longitude > -180 &&
+            longitude < 180
+        );
+    };
 }
 
 export const notifyMe = (message) => {
-  // Let's check if the browser supports notifications
-  if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-  }
+    // Let's check if the browser supports notifications
+    if (!("Notification" in window)) {
+        alert("This browser does not support desktop notification");
+    }
 
-  // Let's check whether notification permissions have already been granted
-  else if (Notification.permission === "granted") {
-    // If it's okay let's create a notification
-    var notification = new Notification(message);
-  }
-
-  // Otherwise, we need to ask the user for permission
-  else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then(function (permission) {
-      // If the user accepts, let's create a notification
-      if (permission === "granted") {
+    // Let's check whether notification permissions have already been granted
+    else if (Notification.permission === "granted") {
+        // If it's okay let's create a notification
         var notification = new Notification(message);
-      }
-    });
-  }
+    }
+
+    // Otherwise, we need to ask the user for permission
+    else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(function(permission) {
+            // If the user accepts, let's create a notification
+            if (permission === "granted") {
+                var notification = new Notification(message);
+            }
+        });
+    }
 };
