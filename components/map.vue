@@ -2,9 +2,12 @@
   <div id="map"></div>
 </template>
 
-  <script>
-import "leaflet/dist/leaflet.css";
-import { ValidateCoords,getCoordsFromAngleAndDistance , notifyMe } from "~/utils/map";
+<script>
+import {
+  ValidateCoords,
+  getCoordsFromAngleAndDistance,
+  notifyMe
+} from "~/utils/map";
 import $socket from "~/plugins/socket";
 export default {
   components: {},
@@ -170,12 +173,23 @@ export default {
           altitude: ${data.altitude} <br/>
         `;
 
+      var greenIcon = L.icon({
+        iconUrl: "http://22291f14f58b.ngrok.io/img/marker-icon.png",
+        shadowUrl: "http://22291f14f58b.ngrok.io/img/marker-shadow.png",
+
+        iconSize: [38, 50], // size of the icon
+        shadowSize: [20, 30], // size of the shadow
+        iconAnchor: [22, 40], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 40], // the same for the shadow
+        popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+      });
+
       let marker = this.markers.find(m => m._id === data.socket_id);
       if (marker) {
         marker.setLatLng(this.getCoordsFromData(data)).update();
         marker.setPopupContent(popUpContent);
       } else {
-        let marker = L.marker(this.getCoordsFromData(data))
+        let marker = L.marker(this.getCoordsFromData(data), { icon: greenIcon })
           .addTo(this.map)
           .bindPopup(popUpContent);
         marker._id = data.socket_id;
