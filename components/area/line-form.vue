@@ -10,10 +10,16 @@
       required
     ></v-select>
     <v-row>
-      <v-col
-        cols="12"
-        class="text-center d-flex align-center justify-space-between"
-      >Start Position
+      <v-col cols="12" class="text-center d-flex align-center justify-space-between">
+        Start Position
+        <v-btn
+          :loading="currentLocationLoading"
+          title="get current location"
+          fab
+          @click="getCurrentPosition"
+        >
+          <v-icon color="success">mdi-crosshairs-gps</v-icon>
+        </v-btn>
       </v-col>
       <v-col cols="12" sm="12" md="6">
         <v-text-field
@@ -106,45 +112,60 @@
 </template>
 
 <script>
-  import {
-    line,
+import {
+  line,
+  coordinatesRules,
+  LINE_AREA_SYSTEM_CARTESIAN,
+  LINE_AREA_SYSTEM_POLAR
+} from "~/utils/area";
+const clone = object => JSON.parse(JSON.stringify(object));
+export default {
+  props: ["selectedMapArea"],
+  data: () => ({
+    currentLocationLoading: false,
+    form: clone(line),
     coordinatesRules,
     LINE_AREA_SYSTEM_CARTESIAN,
-    LINE_AREA_SYSTEM_POLAR,
-  } from "~/utils/area";
-  const clone = object => JSON.parse(JSON.stringify(object));
-  export default {
-    props:['selectedMapArea'],
-    data: () => ({
-      form: clone(line),
-      coordinatesRules,
-      LINE_AREA_SYSTEM_CARTESIAN,
-      LINE_AREA_SYSTEM_POLAR,
-    }),
-    methods:{
-      draw() {
-        this.$emit('draw', this.form)
+    LINE_AREA_SYSTEM_POLAR
+  }),
+  methods: {
+    draw() {
+      this.$emit("draw", this.form);
+    },
+    getCurrentPosition() {
+      if (navigator.geolocation) {
+        this.currentLocationLoading = true;
+
+        navigator.geolocation.getCurrentPosition(p => {
+          this.setCoords({
+            lat: p.coords.latitude,
+            lng: p.coords.longitude
+          });
+          this.currentLocationLoading = false;
+        });
       }
     },
-    watch:{
-      selectedMapArea(value) {
-        if (this.form.type === LINE_AREA_SYSTEM_CARTESIAN) {
-          if (String(this.form.coords.start.lat).trim() === "") {
-            this.form.coords.start.lat = value.lat;
-            this.form.coords.start.lng = value.lng;
-          } else if (
-            String(this.form.coords.end.lat).trim() === ""
-          ) {
-            this.form.coords.end.lat = value.lat;
-            this.form.coords.end.lng = value.lng;
-          } else {
-            this.form.coords = clone(line).coords;
-          }
-        } else if (this.form.type === LINE_AREA_SYSTEM_POLAR) {
+    setCoords(value) {
+      if (this.form.type === LINE_AREA_SYSTEM_CARTESIAN) {
+        if (String(this.form.coords.start.lat).trim() === "") {
           this.form.coords.start.lat = value.lat;
           this.form.coords.start.lng = value.lng;
+        } else if (String(this.form.coords.end.lat).trim() === "") {
+          this.form.coords.end.lat = value.lat;
+          this.form.coords.end.lng = value.lng;
+        } else {
+          this.form.coords = clone(line).coords;
         }
+      } else if (this.form.type === LINE_AREA_SYSTEM_POLAR) {
+        this.form.coords.start.lat = value.lat;
+        this.form.coords.start.lng = value.lng;
       }
     }
+  },
+  watch: {
+    selectedMapArea(value) {
+      this.setCoords(value);
+    }
   }
+};
 </script>

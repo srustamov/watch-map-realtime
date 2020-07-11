@@ -2,7 +2,7 @@
   <v-list>
       <v-subheader>Operation</v-subheader>
       <v-list-item-group color="primary">
-        <v-list-item @click="$emit('open-create-area')">
+        <v-list-item @click="$store.commit('createAreaDialogToggle')">
           <v-list-item-icon>
             <v-icon color="success">mdi-map</v-icon>
           </v-list-item-icon>
