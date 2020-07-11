@@ -3,8 +3,6 @@ const TWO_PI = 2 * Math.PI;
 const RADIUS = 6378.1
 
 
-
-
 export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
 
   let bearing = b * Math.PI / 180
@@ -32,10 +30,7 @@ export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
 }
 
 
-export function coordsCovertDistance({
-  lat1,
-  lon1
-}, lat2, lon2) {
+export function coordsCovertDistance(lat1, lon1, lat2, lon2) {
   //1° of latitude = always 111.32 km
   //1° of longitude = 40075 km * cos( latitude ) / 360
   //eart radius
@@ -58,7 +53,6 @@ export class ValidateCoords {
   static isInsidePitch = (latitude, longitude, data) => {
     let latArray = [];
     let longArray = [];
-    // console.log(data)
     data.forEach(arr => {
       latArray.push(arr[0]);
       longArray.push(arr[1]);
@@ -83,10 +77,7 @@ export class ValidateCoords {
   }
 
 
-  static isInsideCircle = ({
-    lat,
-    lng
-  }, center, radius) => {
+  static isInsideCircle = (lat, lng, center, radius) => {
     return coordsCovertDistance(lat, lng, center.lat, center.lng) <= radius;
   }
 
@@ -125,7 +116,7 @@ export const notifyMe = (message) => {
   // Let's check whether notification permissions have already been granted
   else if (Notification.permission === "granted") {
     // If it's okay let's create a notification
-    var notification = new Notification(message);
+    let notification = new Notification(message);
   }
 
   // Otherwise, we need to ask the user for permission
@@ -133,7 +124,7 @@ export const notifyMe = (message) => {
     Notification.requestPermission().then(function (permission) {
       // If the user accepts, let's create a notification
       if (permission === "granted") {
-        var notification = new Notification(message);
+        let notification = new Notification(message);
       }
     });
   }

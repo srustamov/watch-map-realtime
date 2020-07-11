@@ -1,14 +1,34 @@
+export const CIRCLE_AREA = 1;
+export const LIEN_AREA = 2;
+export const RECTANGLE_AREA = 3;
+export const POLYGON_AREA = 4;
+
+export const LINE_AREA_SYSTEM_CARTESIAN= 1;
+export const LINE_AREA_SYSTEM_POLAR= 2;
+
+export const coordinatesRules = {
+  required: v => String(v).trim() !== "" || "Field is required",
+  lat: [
+    v => String(v).trim() !== "" || "Latitude is required",
+    v => (v <= 180 && v >= -180) || "Latitude invalid"
+  ],
+  lng: [
+    v => String(v).trim() !== "" || "Longitude is required",
+    v => (v <= 90 && v >= -90) || "Longitude invalid"
+  ]
+}
+
 export const areas = [{
-  id: 1,
+  id: CIRCLE_AREA,
   name: 'circle'
 }, {
-  id: 2,
+  id: LIEN_AREA,
   name: 'navigation line'
 }, {
-  id: 3,
+  id: RECTANGLE_AREA,
   name: 'rectangle'
 }, {
-  id: 4,
+  id: POLYGON_AREA,
   name: 'polygon'
 }, ];
 
@@ -29,24 +49,29 @@ export const line = {
       (v) => parseFloat(v) > 0 || "Distance invalid",
     ]
   },
-  types:[
-      {
-        number:1,
-        name:'Cartesian coordinate system'
-      },
-      {
-        number:2,
-        name:'Polar coordinate system'
-      }
+  types: [{
+      number: LINE_AREA_SYSTEM_CARTESIAN,
+      name: 'Cartesian coordinate system'
+    },
+    {
+      number: LINE_AREA_SYSTEM_POLAR,
+      name: 'Polar coordinate system'
+    }
   ],
-  type:1,
-  coords:{
-    start:{lat:'',lng:''},
-    end:{lat:'',lng:''},
+  type: LINE_AREA_SYSTEM_CARTESIAN,
+  coords: {
+    start: {
+      lat: '',
+      lng: ''
+    },
+    end: {
+      lat: '',
+      lng: ''
+    },
   },
-  width:2,
+  width: 2,
   bearing: '',
-  distance:''
+  distance: ''
 }
 
 export const polygon = {

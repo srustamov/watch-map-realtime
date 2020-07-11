@@ -6,7 +6,7 @@
         <v-card tile>
           <v-card-title>remove layer?</v-card-title>
           <v-card-actions class="d-flex justify-space-between">
-            <v-btn color @click="remove_layer_dialog=false">cancel</v-btn>
+            <v-btn @click="remove_layer_dialog=false">cancel</v-btn>
             <v-btn color="red" @click="removeLayer(remove_layer_id)">remove</v-btn>
           </v-card-actions>
         </v-card>
@@ -130,7 +130,7 @@ export default {
       });
 
       notifyMe("Created area");
-      
+
     },
     createCircle(center, radius) {
       let id = Date.now();

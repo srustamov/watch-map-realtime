@@ -54,10 +54,8 @@ module.exports = {
      */
     modules: [
         '@nuxtjs/axios',
-        '~/io',
-
+        // '~/io',
         // ['vuetify-dialog/nuxt', { property: '$dialog' }]
-
     ],
 
     env: {
