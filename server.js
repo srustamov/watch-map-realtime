@@ -1,6 +1,5 @@
 const port = process.env.PORT || 3001
 const isProd = process.env.NODE_ENV === 'production'
-console.log(process.env.WS_URL)
 const api = require(__dirname + '/api/index');
 
 const http = require('http')
@@ -13,7 +12,6 @@ const {
     Builder
 } = require('nuxt')
 const config = require('./nuxt.config.js');
-const { dirname } = require('path');
 config.dev = !isProd
 
 const nuxt = new Nuxt(config)

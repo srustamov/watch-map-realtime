@@ -10,7 +10,7 @@ export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
   let bearing = b * Math.PI / 180
   let lat = latitude * Math.PI / 180
   let lon = longitude * Math.PI / 180;
-  let distance = d/1000;
+  let distance = d / 1000;
 
   lat = Math.asin(
     Math.sin(lat) * Math.cos(distance / RADIUS) +
@@ -24,7 +24,10 @@ export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
     Math.cos(distance / RADIUS) - Math.sin(lat) * Math.sin(lat)
   );
 
-  return {lat:lat * 180 / Math.PI, lng:lon * 180 / Math.PI};
+  return {
+    lat: lat * 180 / Math.PI,
+    lng: lon * 180 / Math.PI
+  };
 
 }
 

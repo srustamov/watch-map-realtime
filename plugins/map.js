@@ -1,14 +1,7 @@
-<<<<<<< HEAD
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
 window.L = require("leaflet");
-
-=======
-import 'leaflet/dist/leaflet.css'
 import "leaflet/dist/images/marker-shadow.png";
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
-window.L = require("leaflet");
->>>>>>> 35d87cb57f929c5b04e6aa2a7ddc257fd7f60a94
 import 'leaflet-defaulticon-compatibility';
 require("leaflet-polylinedecorator");
 

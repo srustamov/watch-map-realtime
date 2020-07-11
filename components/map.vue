@@ -15,12 +15,7 @@
   </div>
 </template>
 
-<<<<<<< HEAD
-  <script>
-import "leaflet/dist/leaflet.css";
-=======
 <script>
->>>>>>> 35d87cb57f929c5b04e6aa2a7ddc257fd7f60a94
 import {
   ValidateCoords,
   getCoordsFromAngleAndDistance,
@@ -242,7 +237,7 @@ export default {
           altitude: ${data.altitude} <br/>
         `;
 
-      var greenIcon = L.icon({
+      let greenIcon = L.icon({
         iconUrl: "http://22291f14f58b.ngrok.io/img/marker-icon.png",
         shadowUrl: "http://22291f14f58b.ngrok.io/img/marker-shadow.png",
 

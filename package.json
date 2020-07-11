@@ -25,10 +25,7 @@
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2",
-<<<<<<< HEAD
-=======
     "sass": "^1.26.10",
->>>>>>> 35d87cb57f929c5b04e6aa2a7ddc257fd7f60a94
     "sass-loader": "7.1.0"
   }
 }
