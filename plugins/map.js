@@ -1,6 +1,18 @@
-import 'leaflet/dist/leaflet.css'
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
 window.L = require("leaflet");
+
+import 'leaflet-defaulticon-compatibility';
 require("leaflet-polylinedecorator");
+
+delete window.L.Icon.Default.prototype._getIconUrl;
+
+window.L.Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+});
+
 
 L.Corridor = L.Polyline.extend({
   initialize: function (latlngs, options) {

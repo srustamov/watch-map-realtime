@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon -w server.js -w nuxt.config.js server.js",
     "build": "nuxt build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "node server.js",
     "export": "nuxt export",
     "serve": "nuxt serve"
   },
@@ -14,16 +14,17 @@
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "leaflet": "^1.6.0",
+    "leaflet-defaulticon-compatibility": "^0.1.1",
     "leaflet-polylinedecorator": "^1.6.0",
     "net": "^1.0.2",
     "nodemon": "^2.0.4",
     "nuxt": "^2.13.0",
     "socket.io": "^2.3.0",
+    "vuetify": "^2.3.4",
     "vuetify-dialog": "^2.0.6"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.2",
-    "sass": "^1.26.10",
-    "sass-loader": "^9.0.2"
+    "sass-loader": "7.1.0"
   }
 }

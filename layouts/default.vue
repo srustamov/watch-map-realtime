@@ -5,12 +5,18 @@
         <navigator @open-create-area="inputDialog.show = true" />
       </v-navigation-drawer>
       <v-app-bar app>
+        
+
         <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-        <v-btn icon @click>
-          <v-icon>mdi-application</v-icon>
-        </v-btn>
+
         <v-toolbar-title v-text="title" />
+
+        
         <v-spacer />
+
+        <v-btn fab color="success" small @click="inputDialog.show = true">
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
       </v-app-bar>
       <v-main app>
         <map-component ref="map" @select="clickMapArea" />
@@ -79,7 +85,10 @@
                   <v-col cols="12">
                     <v-text-field
                       type="number"
-                      :rules="form.circle.rules.radius"
+                      :rules='[
+                        (v) => String(v).trim() !== "" || "Radius is required",
+                        (v) => v > 1 || "Radius invalid",
+                      ]'
                       v-model="form.circle.radius"
                       label="Radius"
                       suffix="metr"

@@ -1,10 +1,27 @@
 <template>
-  <div id="map"></div>
+  <div>
+    <div id="map"></div>
+    <v-row justify="center">
+      <v-dialog ref="remove_layer" max-width="300" v-model="remove_layer_dialog" persistent>
+        <v-card tile>
+          <v-card-title>remove layer?</v-card-title>
+          <v-card-actions class="d-flex justify-space-between">
+            <v-btn color @click="remove_layer_dialog=false">cancel</v-btn>
+            <v-btn color="red" @click="removeLayer(remove_layer_id)">remove</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </div>
 </template>
 
   <script>
 import "leaflet/dist/leaflet.css";
-import { ValidateCoords,getCoordsFromAngleAndDistance , notifyMe } from "~/utils/map";
+import {
+  ValidateCoords,
+  getCoordsFromAngleAndDistance,
+  notifyMe
+} from "~/utils/map";
 import $socket from "~/plugins/socket";
 export default {
   components: {},
@@ -13,8 +30,12 @@ export default {
     zoom: 10,
     map: null,
     markers: [],
+    layers: [],
+    remove_layer_dialog: false,
+    remove_layer_id: null,
     safe_areas: [
       {
+        id:Date.now(),
         name: "AirPort",
         type: "polygon",
         polygon: [
@@ -24,15 +45,6 @@ export default {
           [40.464944, 50.054311],
           [40.465243, 50.050168]
         ]
-      },
-      {
-        name: "AirPort",
-        type: "circle",
-        center: {
-          lat: 40.465243,
-          lng: 50.050168
-        },
-        radius: 50
       }
     ]
   }),
@@ -93,43 +105,69 @@ export default {
       notifyMe("Created area");
     },
     createPolygon(coords) {
+      let id  = Date.now();
       let polygon = L.polygon(coords, {
         color: "#ff7800",
-        weight: 3
-      }).addTo(this.map);
+        weight: 3,
+        id
+      })
+      .on("contextmenu", e => {
+        this.remove_layer_id = e.target.options.id;
+        if (this.remove_layer_id) {
+          this.remove_layer_dialog = true;
+        }
+      })
+      .addTo(this.map);
 
-      L.polylineDecorator(polygon, {
-        patterns: [
-          {
-            offset: 5,
-            repeat: 10,
-            symbol: L.Symbol.dash({
-              pixelSize: 0
-            })
-          }
-        ]
-      }).addTo(this.map);
+      polygon.id = id;
+
+      this.layers.push(polygon);
 
       this.safe_areas.push({
-        name: "Airport",
-        type: "polygon",
-        polygon: coords
+        id,
+        name:'safe area',
+        polygon:coords,
+        type:'polygon'
       });
+
+      notifyMe("Created area");
+      
     },
     createCircle(center, radius) {
-      L.circle(center, parseFloat(radius), {
-        color: "green",
-        fillColor: "#f03",
-        fillOpacity: 0
-      }).addTo(this.map);
-      notifyMe("Created area");
+      let id = Date.now();
+      let layer = L.circle(center, parseFloat(radius), {
+        color: "red",
+        fillColor: "#ab5c5c80",
+        fillOpacity: 5,
+        id
+      })
+      .on("contextmenu", e => {
+        this.remove_layer_id = e.target.options.id;
+        if (this.remove_layer_id) {
+          this.remove_layer_dialog = true;
+        }
+      })
+      .addTo(this.map);
+
+      layer.id = id;
+
+      this.layers.push(layer);
+
       this.safe_areas.push({
-        name: "danger area",
-        center,
-        radius
+        id,
+        name:'safe area',
+        center:center,
+        radius,
+        type:'circle'
       });
+
+      notifyMe("Created area");
+
+
     },
     createLine(data) {
+      let id = Date.now();
+
       if (data.type === 2) {
         data.coords.end = getCoordsFromAngleAndDistance(
           ...Object.values(data.coords.start),
@@ -144,19 +182,49 @@ export default {
           L.latLng(...Object.values(data.coords.end))
         ],
         {
+          id,
           corridor: data.width,
           className: "route-corridor"
         }
-      );
+      )
+      .on("contextmenu", e => {
+        this.remove_layer_id = e.target.options.id;
+        if (this.remove_layer_id) {
+          this.remove_layer_dialog = true;
+        }
+      });
+
+      corridor.id = id;
+
       this.map.fitBounds(corridor.getBounds());
+
       this.map.addLayer(corridor);
 
+      this.layers.push(corridor);
+
       this.safe_areas.push({
+        id,
         name: data.name || "Route line",
         type: "line",
         data
       });
     },
+
+    removeLayer(id) {
+      let index = this.layers.findIndex(l => l.id === id);
+      if (index > -1) {
+        this.map.removeLayer(this.layers[index]);
+        this.layers.splice(index, 1);
+      }
+      this.remove_layer_dialog = false;
+      this.remove_layer_id = null;
+
+      index = this.safe_areas.findIndex(l => l.id === id);
+      if (index > -1) {
+        this.safe_areas.splice(index, 1);
+      }
+    },
+
     getCoordsFromData({ latitude, longitude }) {
       return [latitude, longitude].map(c => parseFloat(c));
     },
@@ -225,5 +293,8 @@ export default {
   height: calc(100vh - 70px);
   width: 100%;
   overflow: hidden;
+}
+.v-dialog__content--active{
+  z-index:9999 !important
 }
 </style>
