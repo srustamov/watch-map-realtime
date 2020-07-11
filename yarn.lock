@@ -7132,7 +7132,11 @@ sass-loader@^8.0.2:
     schema-utils "^2.6.1"
     semver "^6.3.0"
 
+<<<<<<< HEAD
 sass@^1.26.5:
+=======
+sass@^1.26.10, sass@^1.26.5:
+>>>>>>> 35d87cb57f929c5b04e6aa2a7ddc257fd7f60a94
   version "1.26.10"
   resolved "https://registry.yarnpkg.com/sass/-/sass-1.26.10.tgz#851d126021cdc93decbf201d1eca2a20ee434760"
   integrity sha512-bzN0uvmzfsTvjz0qwccN1sPm2HxxpNI/Xa+7PlUEMS+nQvbyuEK7Y0qFqxlPHhiNHb1Ze8WQJtU31olMObkAMw==

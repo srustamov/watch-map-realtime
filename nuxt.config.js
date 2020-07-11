@@ -1,4 +1,8 @@
 const colors = require('vuetify/es5/util/colors').default
+<<<<<<< HEAD
+=======
+
+>>>>>>> 35d87cb57f929c5b04e6aa2a7ddc257fd7f60a94
 module.exports = {
     /*
      ** Nuxt rendering mode
@@ -77,6 +81,7 @@ module.exports = {
         theme: {
             dark: true,
             themes: {
+<<<<<<< HEAD
               dark: {
                 primary: colors.blue.darken2,
                 accent: colors.grey.darken3,
@@ -86,6 +91,17 @@ module.exports = {
                 error: colors.deepOrange.accent4,
                 success: colors.green.accent3
               }
+=======
+                dark: {
+                    primary: colors.blue.darken2,
+                    accent: colors.grey.darken3,
+                    secondary: colors.amber.darken3,
+                    info: colors.teal.lighten1,
+                    warning: colors.amber.base,
+                    error: colors.deepOrange.accent4,
+                    success: colors.green.accent3
+                }
+>>>>>>> 35d87cb57f929c5b04e6aa2a7ddc257fd7f60a94
             }
         }
     },
