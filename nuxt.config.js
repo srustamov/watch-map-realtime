@@ -1,6 +1,13 @@
 const colors = require('vuetify/es5/util/colors')
 
 module.exports = {
+    serverMiddleware: [
+        // Will register redirect-ssl npm package
+    
+        // Will register file from project api directory to handle /api/* requires
+        //{ path: '/api', handler: '~/api/index.js' },
+    
+    ],
     /*
      ** Nuxt rendering mode
      ** See https://nuxtjs.org/api/configuration-mode

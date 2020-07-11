@@ -1,14 +1,19 @@
 const port = process.env.PORT || 3001
 const isProd = process.env.NODE_ENV === 'production'
 
+const api = require(__dirname+'/api/index');
+
 const http = require('http')
-const app = require('express')()
+let app = require('express')()
 const server = http.createServer(app)
 const io = require('socket.io')(server)
 
-const { Nuxt, Builder } = require('nuxt')
-// We instantiate Nuxt.js with the options
-const config = require('./nuxt.config.js')
+const {
+  Nuxt,
+  Builder
+} = require('nuxt')
+const config = require('./nuxt.config.js');
+const { dirname } = require('path');
 config.dev = !isProd
 
 const nuxt = new Nuxt(config)
@@ -17,23 +22,30 @@ if (config.dev) {
   const builder = new Builder(nuxt)
   builder.build()
 }
+
+
+app = api(app);
+
+
 app.use(nuxt.render)
 
-// Listen the server
+
+
 server.listen(port)
-console.log('Server listening on localhost:' + port) // eslint-disable-line no-console
+
+console.log('Server listening on localhost:' + port)
 
 io.on("connection", (socket) => {
   socket.on("make-location", (message) => {
-      let data = JSON.parse(message);
-      data.socket_id = socket.id;
-      io.emit("location", data);
+    let data = JSON.parse(message);
+    data.socket_id = socket.id;
+    io.emit("location", data);
   });
   socket.on("safe-area", (message) => {
-      io.to(message.id).emit("notification", `This is ${message.name} area`);
+    io.to(message.id).emit("notification", `This is ${message.name} area`);
   });
 
   socket.on("disconnect", () => {
-      io.emit("leave", socket.id);
+    io.emit("leave", socket.id);
   });
 });
