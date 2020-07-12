@@ -46,7 +46,8 @@ module.exports = {
    */
   plugins: [{
     src: '~/plugins/map.js',
-    mode: 'client'
+    mode: 'client',
+    defer:true
   }, ],
   /*
    ** Auto import components

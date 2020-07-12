@@ -1,6 +1,11 @@
 const PI = Math.PI;
 const TWO_PI = 2 * Math.PI;
-const RADIUS = 6378.1
+// earth radius
+const RADIUS = 6378.1;
+
+// 1° of latitude = 111.32 km
+// 1° of longitude = 40075 km * cos( latitude ) / 360
+
 
 
 export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
@@ -31,9 +36,6 @@ export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
 
 
 export function coordsCovertDistance(lat1, lon1, lat2, lon2) {
-  //1° of latitude = always 111.32 km
-  //1° of longitude = 40075 km * cos( latitude ) / 360
-  //eart radius
 
   let dLat = (lat2 * Math.PI) / 180 - (lat1 * Math.PI) / 180;
   let dLon = (lon2 * Math.PI) / 180 - (lon1 * Math.PI) / 180;

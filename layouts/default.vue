@@ -36,7 +36,14 @@ export default {
     navigator
   },
   head: {
-    title: "Geo Location"
+    title: "Geo Location",
+    script: [
+     { src: 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.js' ,body:true},
+     { src: 'http://bbecquet.github.io/Leaflet.PolylineDecorator/dist/leaflet.polylineDecorator.js' ,body:true},
+    ],
+    link: [
+     { rel: 'stylesheet', href: 'https://unpkg.com/leaflet@1.6.0/dist/leaflet.css' }
+    ]
   },
   data: () => ({
     drawer: false,

@@ -1,10 +1,7 @@
 <template>
   <v-row>
-    <v-col cols="12" class="text-center d-flex align-center justify-space-between">
+    <v-col cols="12" class="text-center d-flex align-center justify-center">
       Positions
-      <v-btn fab>
-        <v-icon>mdi-map-marker-plus</v-icon>
-      </v-btn>
     </v-col>
 
     <v-col cols="12" sm="12" md="6">
@@ -23,7 +20,7 @@
         :rules="coordinatesRules.lng"
       ></v-text-field>
     </v-col>
-    
+
     <v-col cols="12" sm="12" md="6">
       <v-text-field
         v-model="form.coords[1].lat"
