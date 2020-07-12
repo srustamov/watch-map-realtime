@@ -72,7 +72,9 @@ module.exports = {
     WS_URL: process.env.WS_URL || 'http://localhost:3001'
   },
 
-  axios: {},
+  axios: {
+    baseURL:''
+  },
 
   vuetify: {
     customVariables: ['~/assets/variables.scss'],

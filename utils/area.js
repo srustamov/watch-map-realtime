@@ -7,14 +7,13 @@ export const LINE_AREA_SYSTEM_CARTESIAN= 1;
 export const LINE_AREA_SYSTEM_POLAR= 2;
 
 export const coordinatesRules = {
-  required: v => String(v).trim() !== "" || "Field is required",
   lat: [
     v => String(v).trim() !== "" || "Latitude is required",
-    v => (v <= 180 && v >= -180) || "Latitude invalid"
+    v => (v <= 90 && v >= -90) || "Latitude invalid"
   ],
   lng: [
     v => String(v).trim() !== "" || "Longitude is required",
-    v => (v <= 90 && v >= -90) || "Longitude invalid"
+    v => (v <= 180 && v >= -180) || "Longitude invalid"
   ]
 }
 

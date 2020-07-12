@@ -1,7 +1,17 @@
+
+
 module.exports = function (app) {
 
-  app.get('/api/areas', (req, res) => {
-    res.json([{
+  app.get('/api/map/configs',(req,response) => {
+    response.json({
+      center: [40.462964, 50.052201],
+      zoom: 10,
+    });
+    response.end();
+  });
+
+  app.get('/api/areas', (req, response) => {
+    response.json([{
         name: "AirPort",
         type: "polygon",
         polygon: [
@@ -11,18 +21,9 @@ module.exports = function (app) {
           [40.464944, 50.054311],
           [40.465243, 50.050168]
         ]
-      },
-      {
-        name: "AirPort",
-        type: "circle",
-        center: {
-          lat: 40.465243,
-          lng: 50.050168
-        },
-        radius: 50
       }
     ]);
-    res.end();
+    response.end();
   });
 
 

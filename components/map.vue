@@ -24,9 +24,8 @@
   import $socket from "~/plugins/socket";
 
   export default {
+    props:['center','zoom'],
     data: () => ({
-      center: [40.462964, 50.052201],
-      zoom: 10,
       map: null,
       markers: [],
       layers: [],
@@ -48,6 +47,7 @@
       ]
     }),
     mounted() {
+      console.log('map:',this.zoom);
       this.map = L.map("map").setView(this.center, this.zoom);
       this.map.on("click", e => {
         this.$emit("select", e);
@@ -94,9 +94,7 @@
         }
       });
 
-      $socket.on("leave", id => {
-        this.clearMarker(id);
-      });
+      $socket.on("leave", this.clearMarker);
     },
     methods: {
       createRectangle(a, b) {

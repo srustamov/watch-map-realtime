@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon -w server.js -w nuxt.config.js server.js",
+    "dev": "nodemon -w server.js -w nuxt.config.js  --watch api server.js",
     "build": "nuxt build",
     "start": "node server.js",
     "export": "nuxt export",
