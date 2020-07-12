@@ -82,15 +82,15 @@ export class ValidateCoords {
   }
 
   static angle2D = (y1, x1, y2, x2) => {
-    let dtheta, theta1, theta2;
+    let theta, theta1, theta2;
 
     theta1 = Math.atan2(y1, x1);
     theta2 = Math.atan2(y2, x2);
-    dtheta = theta2 - theta1;
-    while (dtheta > PI) dtheta -= TWO_PI;
-    while (dtheta < -PI) dtheta += TWO_PI;
+    theta = theta2 - theta1;
+    while (theta > PI) theta -= TWO_PI;
+    while (theta < -PI) theta += TWO_PI;
 
-    return dtheta;
+    return theta;
   };
 
   static isValidCoordinate = (latitude, longitude) => {
@@ -106,26 +106,3 @@ export class ValidateCoords {
     );
   };
 }
-
-export const notifyMe = (message) => {
-  // Let's check if the browser supports notifications
-  if (!("Notification" in window)) {
-    alert("This browser does not support desktop notification");
-  }
-
-  // Let's check whether notification permissions have already been granted
-  else if (Notification.permission === "granted") {
-    // If it's okay let's create a notification
-    let notification = new Notification(message);
-  }
-
-  // Otherwise, we need to ask the user for permission
-  else if (Notification.permission !== "denied") {
-    Notification.requestPermission().then(function (permission) {
-      // If the user accepts, let's create a notification
-      if (permission === "granted") {
-        let notification = new Notification(message);
-      }
-    });
-  }
-};

@@ -18,19 +18,21 @@ export const coordinatesRules = {
   ]
 }
 
-export const areas = [{
-  id: CIRCLE_AREA,
-  name: 'circle'
-}, {
-  id: LIEN_AREA,
-  name: 'navigation line'
-}, {
-  id: RECTANGLE_AREA,
-  name: 'rectangle'
-}, {
-  id: POLYGON_AREA,
-  name: 'polygon'
-}, ];
+export const areas = [
+  {
+    id: CIRCLE_AREA,
+    name: 'circle'
+  }, {
+    id: LIEN_AREA,
+    name: 'navigation line'
+  }, {
+    id: RECTANGLE_AREA,
+    name: 'rectangle'
+  }, {
+    id: POLYGON_AREA,
+    name: 'polygon'
+  },
+];
 
 
 

@@ -18,9 +18,9 @@
 <script>
 import {
   ValidateCoords,
-  getCoordsFromAngleAndDistance,
-  notifyMe
+  getCoordsFromAngleAndDistance
 } from "~/utils/map";
+import { notifyMe } from '~/utils/client'
 import $socket from "~/plugins/socket";
 export default {
   components: {},

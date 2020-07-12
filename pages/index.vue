@@ -46,10 +46,6 @@ export default {
   }),
   computed: mapGetters(["create_area_dialog"]),
   methods: {
-    inputDialogSizeToggle() {
-      this.inputDialog.width =
-        this.inputDialog.width === "auto" ? "50px" : "auto";
-    },
     clickMapArea(e) {
       this.selectedMapArea = e.latlng;
     }
@@ -61,7 +57,7 @@ export default {
   position: absolute;
   right: 0px;
   top: 0px;
-  z-index: 999;
+  z-index: 9997;
   bottom: 0;
   max-width: 450px;
   overflow-y: auto;
