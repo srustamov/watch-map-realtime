@@ -1,5 +1,9 @@
 const colors = require('vuetify/es5/util/colors').default
+
+
+
 module.exports = {
+  telemetry: false,
   /*
    ** Nuxt rendering mode
    ** See https://nuxtjs.org/api/configuration-mode

@@ -17,7 +17,7 @@
           <v-icon color="white" v-if="!$store.getters.create_area_dialog.show">mdi-plus</v-icon>
           <v-icon color="white" v-else>mdi-close</v-icon>
         </v-btn>
-        <v-btn class="ml-3" fab small @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+        <v-btn class="ml-3" fab small @click="changeTheme(!$vuetify.theme.dark)">
           <v-icon color="orange" v-if="$vuetify.theme.dark">mdi-brightness-4</v-icon>
           <v-icon color="grey darken-1" v-else>mdi-brightness-7</v-icon>
         </v-btn>
@@ -48,7 +48,18 @@ export default {
   data: () => ({
     drawer: false,
     title: "Geo-location"
-  })
+  }),
+  methods:{
+    changeTheme(value) {
+      this.$vuetify.theme.dark = value;
+      localStorage.setItem('theme',value);
+    }
+  },
+  mounted() {
+    let storage = localStorage.getItem('theme');
+
+    this.$vuetify.theme.dark = !storage || storage === 'true';
+  }
 };
 </script>
 

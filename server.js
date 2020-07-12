@@ -1,9 +1,7 @@
-const port = process.env.PORT || 3001
-const isProd = process.env.NODE_ENV === 'production'
 const makeApi = require(__dirname + '/api/index');
 const startSocketIo = require(__dirname + '/api/socket');
 const http = require('http')
-let app = require('express')();
+const app = require('express')();
 const server = http.createServer(app)
 const io = require('socket.io')(server)
 
@@ -12,7 +10,8 @@ const {
   Builder
 } = require('nuxt')
 const config = require('./nuxt.config.js');
-config.dev = !isProd
+
+config.dev = !(process.env.NODE_ENV === 'production')
 
 const nuxt = new Nuxt(config)
 if (config.dev) {
@@ -21,12 +20,12 @@ if (config.dev) {
 }
 
 
-app = makeApi(app);
+const api = makeApi(app);
 
-app.use(nuxt.render)
+api.use(nuxt.render)
 
-server.listen(port)
-
-console.log('Server listening on localhost:' + port)
+server.listen(3001)
 
 startSocketIo(io);
+
+console.log('Server listening on localhost:' + 3001)

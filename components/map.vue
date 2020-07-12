@@ -47,7 +47,6 @@
       ]
     }),
     mounted() {
-      console.log('map:',this.zoom);
       this.map = L.map("map").setView(this.center, this.zoom);
       this.map.on("click", e => {
         this.$emit("select", e);

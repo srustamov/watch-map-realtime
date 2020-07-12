@@ -31,12 +31,7 @@
     </v-card>
   </div>
   <div v-else style="height: 100%" class="pa-9 d-flex flex-column justify-center align-center">
-    <v-progress-circular
-      :size="70"
-      :width="7"
-      color="purple"
-      indeterminate
-    ></v-progress-circular>
+    <v-progress-circular :size="70" :width="7" color="purple" indeterminate></v-progress-circular>
     <p>loading...</p>
   </div>
 </template>
@@ -46,21 +41,21 @@ import { mapGetters } from "vuex";
 import MapComponent from "~/components/map.vue";
 import AreaForms from "~/components/area/index";
 export default {
-  components: {MapComponent, AreaForms},
+  components: { MapComponent, AreaForms },
   data: () => ({
-    loading:true,
+    loading: true,
     selectedMapArea: null,
-    map:{
+    map: {
       center: [40.462964, 50.052201],
-      zoom: 10,
+      zoom: 10
     }
   }),
-  async mounted() {
-    this.$axios.$get('/api/map/configs').then(data => {
-      this.map = data;
-    }).finally(() => this.loading = false);
+  mounted() {
+    this.$axios
+      .$get("/api/map/configs")
+      .then(data => (this.map = data))
+      .finally(() => (this.loading = false));
   },
-
   computed: mapGetters(["create_area_dialog"]),
   methods: {
     clickMapArea(e) {
