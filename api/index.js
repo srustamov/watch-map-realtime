@@ -1,7 +1,6 @@
 
 
 module.exports = function (app) {
-
   app.get('/api/map/configs',(req,response) => {
     response.json({
       center: [40.462964, 50.052201],
@@ -25,7 +24,6 @@ module.exports = function (app) {
     ]);
     response.end();
   });
-
 
   return app;
 }
