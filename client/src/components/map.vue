@@ -22,6 +22,7 @@
   } from "@/utils/map";
   import {notifyMe} from '@/utils/client'
   import $socket from "@/plugins/socket";
+  import corridor from '../plugins/map';
 
   export default {
     props:['center','zoom'],
@@ -47,6 +48,12 @@
       ]
     }),
     mounted() {
+      L.Corridor = L.Polyline.extend(corridor);
+      L.corridor = function (latlngs, options) {
+        return new L.Corridor(latlngs, options || {
+          corridor: 100
+        });
+      }
       this.map = L.map("map").setView(this.center, this.zoom);
       this.map.on("click", e => {
         this.$emit("select", e);
@@ -161,6 +168,7 @@
 
       },
       createLine(data) {
+
         let id = Date.now();
 
         if (data.type === 2) {

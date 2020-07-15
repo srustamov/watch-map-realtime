@@ -16,7 +16,7 @@
 // });
 
 
-L.Corridor = L.Polyline.extend({
+export default {
   initialize: function (latlngs, options) {
     let self = this;
 
@@ -57,10 +57,10 @@ L.Corridor = L.Polyline.extend({
     let latLngX = map.containerPointToLatLng(pointX);
     return centerLatLng.distanceTo(latLngX) / 10;
   }
-});
+};
 
-L.corridor = function (latlngs, options) {
-  return new L.Corridor(latlngs, options || {
-    corridor: 100
-  });
-}
+// L.corridor = function (latlngs, options) {
+//   return new L.Corridor(latlngs, options || {
+//     corridor: 100
+//   });
+// }

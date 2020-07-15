@@ -19,6 +19,7 @@ const Route = use("Route");
 Route.on("/").render("welcome");
 
 Route.group(() => {
-    Route.get('/map/routes', 'MapController.index')
+    Route.post('/map/routes', 'MapController.routes')
+    Route.get('/map/store', 'MapController.store')
     Route.get('/map/configs', 'MapController.configs')
 }).prefix('/api')

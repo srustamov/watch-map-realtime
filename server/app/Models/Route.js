@@ -4,13 +4,10 @@
 const Model = use('Model')
 
 class Route extends Model {
-    // setBegin(begin) {
+  static get hidden () {
+    return ['created_at','updated_at']
+  }
 
-    // }
-
-    // setSpeed(speed) {
-
-    // }
 }
 
 module.exports = Route

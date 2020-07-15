@@ -10,6 +10,8 @@ class RoutesSchema extends Schema {
             table.string('start')
             table.string('end')
             table.string('speed')
+            table.string('angle')
+            table.integer('distance')
             table.string('begin_date')
             table.string('begin_time')
             table.string('finish_date')

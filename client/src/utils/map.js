@@ -6,6 +6,20 @@ const RADIUS = 6378.1;
 // 1° of latitude = 111.32 km
 // 1° of longitude = 40075 km * cos( latitude ) / 360
 
+export const angleFromCoordinate = (lat1,lon1,lat2,lon2) => {
+  let p1 = {
+    x: lat1,
+    y: lon1
+  };
+
+  let p2 = {
+    x: lat2,
+    y: lon2
+  };
+
+  // angle in degrees
+  return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / PI;
+}
 
 
 export const getCoordsFromAngleAndDistance = (latitude, longitude, d, b) => {
