@@ -19,25 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2c903f01-54b2-45cd-bfb2-6b6d7dae9606" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/map.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/map.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/navigator.vue" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/navigator.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/plugins/map.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/plugins/map.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/utils/map.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/utils/map.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/client/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/server/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/Controllers/Http/MapController.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/Controllers/Http/MapController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/Helpers/Map.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/Helpers/Map.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/app/Models/Route.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/Models/Route.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/config/shield.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/shield.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/database/migrations/1594733745020_routes_schema.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/database/migrations/1594733745020_routes_schema.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/start/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/start/routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/server/yarn.lock" afterDir="false" />
-    </list>
+    <list default="true" id="2c903f01-54b2-45cd-bfb2-6b6d7dae9606" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -104,6 +86,7 @@
       <workItem from="1594657074290" duration="1790000" />
       <workItem from="1594708533993" duration="635000" />
       <workItem from="1594744277678" duration="22898000" />
+      <workItem from="1594793359639" duration="160000" />
     </task>
     <servers />
   </component>
