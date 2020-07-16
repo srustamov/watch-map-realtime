@@ -1,8 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" class="text-center d-flex align-center justify-center">
-      Positions
-    </v-col>
+    <v-col cols="12" class="text-center d-flex align-center justify-center">Positions</v-col>
 
     <v-col cols="12" sm="12" md="6">
       <v-text-field
@@ -51,7 +49,7 @@ export default {
   props: ["selectedMapArea"],
   data: () => ({
     form: clone(rectangle),
-    coordinatesRules,
+    coordinatesRules
   }),
   watch: {
     selectedMapArea(value) {
@@ -64,7 +62,7 @@ export default {
           this.form = clone(rectangle);
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>

@@ -1,9 +1,6 @@
 <template>
   <v-row>
-    <v-col
-      cols="12"
-      class="text-center d-flex align-center justify-space-between"
-    >
+    <v-col cols="12" class="text-center d-flex align-center justify-space-between">
       Center Coordinates
       <v-btn
         :loading="currentLocationLoading"
@@ -57,31 +54,31 @@ export default {
   data: () => ({
     form: clone(circle),
     coordinatesRules,
-    currentLocationLoading: false,
+    currentLocationLoading: false
   }),
   methods: {
     getCurrentCoords() {
       this.currentLocationLoading = true;
 
       getCurrentPosition()
-        .then((position) => {
+        .then(position => {
           this.$set(this.form, "coords", {
             lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lng: position.coords.longitude
           });
           this.currentLocationLoading = false;
         })
         .catch(() => {
           this.currentLocationLoading = false;
         });
-    },
+    }
   },
   watch: {
     selectedMapArea(value) {
       if (value) {
         this.$set(this.form, "coords", value);
       }
-    },
-  },
+    }
+  }
 };
 </script>

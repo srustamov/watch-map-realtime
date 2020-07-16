@@ -21,7 +21,6 @@
     getCoordsFromAngleAndDistance
   } from "@/utils/map";
   import {notifyMe} from '@/utils/client'
-  import $socket from "@/plugins/socket";
   import corridor from '../plugins/map';
 
   export default {

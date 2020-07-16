@@ -11,27 +11,18 @@
     ></v-select>
 
     <div v-if="form.area === CIRCLE_AREA">
-      <circle-form :selectedMapArea="selectedMapArea" @draw="drawCircleArea">
-      </circle-form>
+      <circle-form :selectedMapArea="selectedMapArea" @draw="drawCircleArea"></circle-form>
     </div>
     <div v-if="form.area === POLYGON_AREA">
-      <polygon-form :selectedMapArea="selectedMapArea" @draw="drawPolygon">
-      </polygon-form>
+      <polygon-form :selectedMapArea="selectedMapArea" @draw="drawPolygon"></polygon-form>
     </div>
     <div v-if="form.area === LIEN_AREA">
-      <line-form :selectedMapArea="selectedMapArea" @draw="drawNavLine">
-      </line-form>
+      <line-form :selectedMapArea="selectedMapArea" @draw="drawNavLine"></line-form>
     </div>
     <div v-if="form.area === RECTANGLE_AREA">
-      <rectangle-form
-        :selectedMapArea="selectedMapArea"
-        @draw="drawRectangleArea"
-      >
-      </rectangle-form>
+      <rectangle-form :selectedMapArea="selectedMapArea" @draw="drawRectangleArea"></rectangle-form>
     </div>
-    <v-btn color="error" class="mr-4" @click="$refs.form.reset()"
-      >Reset information</v-btn
-    >
+    <v-btn color="error" class="mr-4" @click="$refs.form.reset()">Reset information</v-btn>
   </v-form>
 </template>
 
@@ -41,7 +32,7 @@ import {
   CIRCLE_AREA,
   LIEN_AREA,
   RECTANGLE_AREA,
-  POLYGON_AREA,
+  POLYGON_AREA
 } from "@/utils/area";
 
 import circleForm from "./circle-form";
@@ -55,7 +46,7 @@ export default {
     "circle-form": circleForm,
     "line-form": lineForm,
     "polygon-form": polygonForm,
-    "rectangle-form": rectangleForm,
+    "rectangle-form": rectangleForm
   },
   data: () => ({
     CIRCLE_AREA,
@@ -65,13 +56,13 @@ export default {
     areas,
     form: {
       valid: true,
-      area: null,
-    },
+      area: null
+    }
   }),
   methods: {
     drawPolygon(data) {
       if (this.$refs.form.validate()) {
-        this.map.createPolygon(data.inputs.map((i) => Object.values(i)));
+        this.map.createPolygon(data.inputs.map(i => Object.values(i)));
         this.form.area = "";
         this.resetAndClose();
       }
@@ -102,12 +93,12 @@ export default {
     resetAndClose() {
       this.$emit("reset-map-area");
       this.$emit("close");
-    },
+    }
   },
   watch: {
     area() {
       this.$emit("reset-map-area");
-    },
-  },
+    }
+  }
 };
 </script>

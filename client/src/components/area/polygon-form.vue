@@ -42,20 +42,20 @@ export default {
   props: ["selectedMapArea"],
   data: () => ({
     form: clone(polygon),
-    coordinatesRules,
+    coordinatesRules
   }),
   methods: {
     addInput() {
       this.form.inputs.push({
         lat: "",
-        lng: "",
+        lng: ""
       });
     },
     removeInput(key) {
       if (this.form.inputs.length > 3) {
         this.form.inputs.splice(key, 1);
       }
-    },
+    }
   },
   watch: {
     selectedMapArea(value) {
@@ -70,7 +70,7 @@ export default {
         this.form = clone(polygon);
         this.$set(this.form.inputs, 0, value);
       }
-    },
-  },
+    }
+  }
 };
 </script>

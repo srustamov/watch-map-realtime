@@ -10,10 +10,7 @@
       required
     ></v-select>
     <v-row>
-      <v-col
-        cols="12"
-        class="text-center d-flex align-center justify-space-between"
-      >
+      <v-col cols="12" class="text-center d-flex align-center justify-space-between">
         Start Position
         <v-btn
           :loading="currentLocationLoading"
@@ -55,11 +52,7 @@
       </v-col>
     </v-row>
     <v-row v-if="form.type === LINE_AREA_SYSTEM_CARTESIAN">
-      <v-col
-        cols="12"
-        class="text-center d-flex align-center justify-space-between"
-        >End Position</v-col
-      >
+      <v-col cols="12" class="text-center d-flex align-center justify-space-between">End Position</v-col>
       <v-col cols="12" sm="12" md="6">
         <v-text-field
           v-model="form.coords.end.lat"
@@ -123,7 +116,7 @@ import {
   line,
   coordinatesRules,
   LINE_AREA_SYSTEM_CARTESIAN,
-  LINE_AREA_SYSTEM_POLAR,
+  LINE_AREA_SYSTEM_POLAR
 } from "@/utils/area";
 
 import { getCurrentPosition } from "@/utils/client";
@@ -136,17 +129,17 @@ export default {
     form: clone(line),
     coordinatesRules,
     LINE_AREA_SYSTEM_CARTESIAN,
-    LINE_AREA_SYSTEM_POLAR,
+    LINE_AREA_SYSTEM_POLAR
   }),
   methods: {
     getCurrentCoords() {
       this.currentLocationLoading = true;
 
       getCurrentPosition()
-        .then((position) => {
+        .then(position => {
           this.setCoords({
             lat: position.coords.latitude,
-            lng: position.coords.longitude,
+            lng: position.coords.longitude
           });
           this.currentLocationLoading = false;
         })
@@ -166,12 +159,12 @@ export default {
       } else if (this.form.type === LINE_AREA_SYSTEM_POLAR) {
         this.$set(this.form.coords, "start", value);
       }
-    },
+    }
   },
   watch: {
     selectedMapArea(value) {
       if (value) this.setCoords(value);
-    },
-  },
+    }
+  }
 };
 </script>

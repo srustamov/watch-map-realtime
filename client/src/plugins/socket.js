@@ -1,5 +1,8 @@
+import Vue from 'vue'
 import io from 'socket.io-client'
 
-const socket = io('http://localhost:3333')
+window.$socket = io(window.SOCKET_URL)
 
-export default socket;
+Vue.prototype.$socket = window.$socket;
+
+export default window.$socket;
