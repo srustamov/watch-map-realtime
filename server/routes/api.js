@@ -1,5 +1,6 @@
-var express = require("express");
-var router = express.Router();
+const express = require("express");
+const moment = require("moment");
+const router = express.Router();
 
 const { Route } = require("../models");
 const { coordsCovertDistance, angleFromCoordinate } = require("../helpers/map");

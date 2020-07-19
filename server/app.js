@@ -3,7 +3,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-// const logger = require("morgan");
 const view = require("express-edge");
 const apiRouter = require("./routes/api");
 const cors = require("cors");
@@ -25,7 +24,6 @@ view.config({ cache: process.env.NODE_ENV === "production" });
 app.use(view.engine);
 app.set("views", path.join(__dirname, "views"));
 
-// app.use(logger("dev"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -48,8 +46,16 @@ app.use(function(err, req, res, next) {
     res.locals.error = req.app.get("env") === "development" ? err : {};
 
     // render the error page
-    res.status(err.status || 500);
-    res.render("error");
+
+    if (err.status === 404) {
+        res.status(200).render('index')
+    } else {
+        res.status(err.status || 500);
+        res.render("error", {
+            error: err,
+        });
+    }
+
 });
 
 module.exports = app;
