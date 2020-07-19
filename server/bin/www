@@ -1,30 +1,22 @@
 #!/usr/bin/env node
 
-const app = require("../app");
+const path = require('path')
+
+global.use = (module) => require(path.join(path.dirname(__dirname), module));
+
+const app = use("app");
 const debug = require("debug")("node-server:server");
 const http = require("http");
 const socket = require("socket.io");
-const initSocketIo = require("../routes/socket");
+const initSocketIo = use("routes/socket");
 
 
-
-/**
- * Get port from environment and store in Express.
- */
 
 const port = normalizePort(process.env.PORT || "3000");
 
 app.set("port", port);
 
-/**
- * Create HTTP server.
- */
-
 const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
 
 server.listen(port);
 
@@ -35,9 +27,6 @@ initSocketIo(io);
 server.on("error", onError);
 server.on("listening", onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
 
 function normalizePort(val) {
     const port = parseInt(val, 10);

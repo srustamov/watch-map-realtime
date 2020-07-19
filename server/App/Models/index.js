@@ -1,8 +1,8 @@
 const path = require("path");
-
-const config = require("../configs/database.js");
-
 const Sequelize = require("sequelize");
+
+const config = use("configs/database.js");
+
 
 const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD, {
     host: config.HOST,
