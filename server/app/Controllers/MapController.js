@@ -1,8 +1,8 @@
 const moment = require("moment");
 
-const { Route } = use("App/Models");
+const { Route } = use("app/Models");
 
-const { coordsCovertDistance, angleFromCoordinate } = use("App/Helpers/map");
+const { coordsCovertDistance, angleFromCoordinate } = use("app/Helpers/map");
 
 class MapController {
 

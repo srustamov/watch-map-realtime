@@ -5,7 +5,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const view = require("express-edge");
 const apiRouter = use("routes/api");
-const database = use("App/Models");
+const database = use("app/Models");
 
 const app = express();
 
@@ -17,7 +17,7 @@ database.sequelize.sync();
 
 view.config({ cache: process.env.NODE_ENV === "production" });
 app.use(view.engine);
-app.set("views", path.join(__dirname, "App/Views"));
+app.set("views", path.join(__dirname, "app/Views"));
 
 
 app.use(bodyParser.json());

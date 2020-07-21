@@ -4,7 +4,7 @@ const path = require('path')
 
 global.use = (module) => require(path.join(path.dirname(__dirname), module));
 
-const app = use("app");
+const app = use("main");
 const debug = require("debug")("node-server:server");
 const http = require("http");
 const socket = require("socket.io");
