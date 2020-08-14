@@ -1,1 +1,1 @@
-cd server && yarn start
+cd server && yarn && yarn serve

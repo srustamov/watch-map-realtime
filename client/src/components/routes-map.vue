@@ -36,7 +36,7 @@ export default {
 
       if (this.layer.base) {
         L.tileLayer(this.layer.url, {
-          attribution: "&copy; ASC"
+          attribution: "&copy; Samir Rustamov"
         }).addTo(this.map);
       } else {
         L.tileLayer(this.layer.url, {

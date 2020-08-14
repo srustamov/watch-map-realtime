@@ -2,11 +2,12 @@ const moment = require("moment");
 
 const { Route } = use("app/Models");
 
-const { coordsCovertDistance, angleFromCoordinate } = use("app/Helpers/map");
+const {
+    coordsCovertDistance,
+    angleFromCoordinate
+} = use("app/Helpers/map");
 
 class MapController {
-
-
 
     routes(request, response) {
         Route.getByDate(request.body.date)
@@ -37,7 +38,10 @@ class MapController {
         ];
 
         coords.forEach((value) => {
-            let { start, end } = value;
+            let {
+                start,
+                end
+            } = value;
             let speed = 300;
             let begin_date = "2020-07-16";
             let finish_date = "2020-07-16";
@@ -60,7 +64,9 @@ class MapController {
 
         await Route.bulkCreate(routes);
 
-        response.json({ success: true }).end();
+        response.json({
+            success: true
+        }).end();
     }
 
     configs(req, response) {

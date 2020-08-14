@@ -58,7 +58,7 @@
         this.$emit("select", e);
       });
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; ASC"
+        attribution: "&copy; Samir Rustamov"
       }).addTo(this.map);
 
       $socket.on("location", data => {
